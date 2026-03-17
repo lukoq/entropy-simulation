@@ -92,8 +92,32 @@ def update_particle_colors(particles):
         p.color = vector(r, g, b)
 
 
-scene = canvas(title='Entropy simulation', width=800, height=600, align='left')
-N = 50
+def update_histogram():
+    bin_width = 0.5
+    max_v_range = 5.0
+    num_bins = int(max_v_range / bin_width)
+    counts = [0] * num_bins
+
+    for p in particles:
+        speed = p.v.mag
+        bin_index = int(speed / bin_width)
+
+        if bin_index < num_bins:
+            counts[bin_index] += 1
+
+    plot_data = []
+    for i in range(num_bins):
+        x_val = i * bin_width + (bin_width / 2)
+        plot_data.append((x_val, counts[i]))
+
+    hist_bars.data = plot_data
+
+
+scene = canvas(title='Entropy simulation',
+               width=800,
+               height=600,
+               align='left')
+N = 100
 L = 5
 dt = 0.01
 particles = []
@@ -119,10 +143,19 @@ graph_entropy = graph(title="The increase of Entropy S = ln(W)",
                       width=400,
                       height=300,
                       align='left')
+graph_hist = graph(title="Maxwell-Boltzmann distribution",
+                   xtitle="Speed",
+                   ytitle="Number of particles",
+                   width=400,
+                   height=300,
+                   align='left')
+
+s_curve = gcurve(graph=graph_entropy, color=color.red)
+hist_bars = gvbars(graph=graph_hist, color=color.blue, delta=0.5)
 
 edges(L, color.cyan)
-s_curve = gcurve(color=color.red)
 t = 0
+
 
 while True:
     rate(60)
@@ -130,5 +163,6 @@ while True:
     handle_self_collisions(particles)
     update_particle_colors(particles)
     if int(t / dt) % 10 == 0:
+        update_histogram()
         s_curve.plot(t, calculate_entropy())
     t += dt
