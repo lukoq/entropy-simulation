@@ -2,27 +2,11 @@ from vpython import *
 import random
 import math
 
-N = 50
-L = 5
-dt = 0.01
-
-scene = canvas(title='Entropy simulation', width=800, height=600, align='left')
-
-particles = []
-for i in range(N):
-    p = sphere(
-        pos=vector(random.uniform(-L, -L / 2), random.uniform(-L, -L / 2), random.uniform(-L, -L / 2)),
-        radius=0.2,
-        color=color.cyan,
-        make_trail=False
-    )
-    p.v = vector(random.uniform(-2, 2), random.uniform(-2, 2), random.uniform(-2, 2))
-    particles.append(p)
-
 
 def edges(L, edge_color):
-    c1 = [vector(-2*L, -L, -L), vector(2*L, -L, -L), vector(2*L, -L, L), vector(-2*L, -L, L), vector(-2*L, -L, -L)]
-    c2 = [vector(-2*L, L, -L), vector(2*L, L, -L), vector(2*L, L, L), vector(-2*L, L, L), vector(-2*L, L, -L)]
+    c1 = [vector(-2 * L, -L, -L), vector(2 * L, -L, -L), vector(2 * L, -L, L), vector(-2 * L, -L, L),
+          vector(-2 * L, -L, -L)]
+    c2 = [vector(-2 * L, L, -L), vector(2 * L, L, -L), vector(2 * L, L, L), vector(-2 * L, L, L), vector(-2 * L, L, -L)]
 
     curve(pos=c1, color=edge_color, radius=0.05)
     curve(pos=c2, color=edge_color, radius=0.05)
@@ -58,17 +42,6 @@ def calculate_entropy():
     return ln_W
 
 
-room = box(pos=vector(0, 0, 0),
-           size=vector(4 * L, 2 * L, 2 * L),
-           opacity=0.1,
-           color=color.white)
-
-edges(L, color.cyan)
-graph_entropy = graph(title="The increase of Entropy S = ln(W)", xtitle="Time", ytitle="S", width=400, height=300, align='left')
-s_curve = gcurve(color=color.red)
-t = 0
-
-
 def handle_self_collisions(particles):
     n = len(particles)
     for i in range(n):
@@ -96,9 +69,9 @@ def handle_self_collisions(particles):
 def handle_wall_collisions(particles):
     for p in particles:
         p.pos += p.v * dt
-        if abs(p.pos.x) >= 2*L:
+        if abs(p.pos.x) >= 2 * L:
             p.v.x *= -1
-            p.pos.x = 2*L if p.pos.x > 0 else -2*L
+            p.pos.x = 2 * L if p.pos.x > 0 else -2 * L
         if abs(p.pos.y) >= L:
             p.v.y *= -1
             p.pos.y = L if p.pos.y > 0 else -L
@@ -118,6 +91,38 @@ def update_particle_colors(particles):
         b = 1.0 - ratio
         p.color = vector(r, g, b)
 
+
+scene = canvas(title='Entropy simulation', width=800, height=600, align='left')
+N = 50
+L = 5
+dt = 0.01
+particles = []
+
+for i in range(N):
+    p = sphere(
+        pos=vector(random.uniform(-L, -L / 2), random.uniform(-L, -L / 2), random.uniform(-L, -L / 2)),
+        radius=0.2,
+        color=color.cyan,
+        make_trail=False
+    )
+    p.v = vector(random.uniform(-2, 2), random.uniform(-2, 2), random.uniform(-2, 2))
+    particles.append(p)
+
+room = box(pos=vector(0, 0, 0),
+           size=vector(4 * L, 2 * L, 2 * L),
+           opacity=0.1,
+           color=color.white)
+
+graph_entropy = graph(title="The increase of Entropy S = ln(W)",
+                      xtitle="Time",
+                      ytitle="S",
+                      width=400,
+                      height=300,
+                      align='left')
+
+edges(L, color.cyan)
+s_curve = gcurve(color=color.red)
+t = 0
 
 while True:
     rate(60)
