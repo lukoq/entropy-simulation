@@ -6,7 +6,7 @@ N = 50
 L = 5
 dt = 0.01
 
-scene = canvas(title='Entropy simulation', width=800, height=600)
+scene = canvas(title='Entropy simulation', width=800, height=600, align='left')
 
 particles = []
 for i in range(N):
@@ -32,11 +32,20 @@ def edges(L, edge_color):
 
 
 def calculate_entropy():
-    counts = [0] * 8
+    counts = [0] * 16
     for p in particles:
-        ix = 0 if p.pos.x < 0 else 1
-        iy = 0 if p.pos.y < 0 else 2
-        iz = 0 if p.pos.z < 0 else 4
+        if p.pos.x < -L:
+            ix = 0
+        elif p.pos.x < 0:
+            ix = 1
+        elif p.pos.x < L:
+            ix = 2
+        else:
+            ix = 3
+
+        iy = 0 if p.pos.y < 0 else 4
+        iz = 0 if p.pos.z < 0 else 8
+
         counts[ix + iy + iz] += 1
 
     # W = N! / (n1! * n2! * ... * n8!)
@@ -55,6 +64,8 @@ room = box(pos=vector(0, 0, 0),
            color=color.white)
 
 edges(L, color.cyan)
+graph_entropy = graph(title="The increase of Entropy S = ln(W)", xtitle="Time", ytitle="S", width=400, height=300, align='left')
+s_curve = gcurve(color=color.red)
 t = 0
 
 
@@ -85,9 +96,9 @@ def handle_self_collisions(particles):
 def handle_wall_collisions(particles):
     for p in particles:
         p.pos += p.v * dt
-        if abs(p.pos.x) >= L:
+        if abs(p.pos.x) >= 2*L:
             p.v.x *= -1
-            p.pos.x = L if p.pos.x > 0 else -L
+            p.pos.x = 2*L if p.pos.x > 0 else -2*L
         if abs(p.pos.y) >= L:
             p.v.y *= -1
             p.pos.y = L if p.pos.y > 0 else -L
@@ -97,7 +108,7 @@ def handle_wall_collisions(particles):
 
 
 def update_particle_colors(particles):
-    MAX_V = 15.0
+    MAX_V = 2.0 * sqrt(3)
     for p in particles:
         v_mag = p.v.mag
         ratio = min(v_mag / MAX_V, 1.0)
@@ -113,4 +124,6 @@ while True:
     handle_wall_collisions(particles)
     handle_self_collisions(particles)
     update_particle_colors(particles)
+    if int(t / dt) % 10 == 0:
+        s_curve.plot(t, calculate_entropy())
     t += dt
