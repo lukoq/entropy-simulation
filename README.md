@@ -36,11 +36,12 @@ $$
 P(A) = \frac{N!}{n_1!n_2!...n_m!\cdot m^N} = \frac{W}{m^N}
 $$
 
-It's really hard to calculate for larger numbers so we can approximate the result using a formula
+It's really hard to calculate for larger numbers. For the 2-parts system, we can approximate the result using a formula (Gaussian PDF):
 
-TODO
 $$
-P(A)\approx\sqrt\frac{2}{\pi N}\cdot e^\frac{-2(m-N/2)^2}{N}
+P(A_x)\approx\sqrt\frac{2}{\pi N}\cdot e^{-2(x-N/2)^2/N}
 $$
 
-
+<div align="center">
+<img width="780" height="453" alt="Figure_macrostate_propability" src="https://github.com/user-attachments/assets/c23f7f8a-e112-4cb5-a3f1-e058b8e823a0" />
+</div>
