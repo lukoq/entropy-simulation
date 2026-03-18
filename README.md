@@ -43,5 +43,5 @@ P(A_x)\approx\sqrt\frac{2}{\pi N}\cdot e^{-2(x-N/2)^2/N}
 $$
 
 <div align="center">
-<img width="780" height="453" alt="Figure_macrostate_propability" src="https://github.com/user-attachments/assets/c23f7f8a-e112-4cb5-a3f1-e058b8e823a0" />
+<img width="648" height="442" alt="Figure_1" src="https://github.com/user-attachments/assets/9745e5e4-d249-40a9-b5bc-47909693aa79" />
 </div>
