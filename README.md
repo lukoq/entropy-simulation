@@ -5,6 +5,8 @@ They have random speeds and directions which is requeired in simulation.
 
 In my simulation, my cuboid measures 20x10x10 and a single particle has a radius of 0.2. I divided my entire room into 16 equal parts and I am checking how many partciles are in the each part at a given moment.
 
+## Logic
+
 Spread out particles realize a specific macrostate. The number of possible microstates in a given macrostate is
 
 $$
@@ -45,3 +47,40 @@ $$
 <div align="center">
 <img width="648" height="442" alt="Figure_1" src="https://github.com/user-attachments/assets/9745e5e4-d249-40a9-b5bc-47909693aa79" />
 </div>
+<br>
+
+As we can see the highest point of the graph lies at $x=5$. This is the state with the highest entropy and the largest number of microstates. With that in mind, the result for a larger number of parts ($m>2$) can be predicted. We will always achieve maximum Entropy in the state with the greatest dispersion and this is the most likely case.
+
+The greatest dispersion of particles across a room means
+
+$$
+n_{ideal} = \frac{N}{m}
+$$
+
+- $n_{ideal}$ – the integer value that each part ($n_1$, $n_2$,... $n_m$) must contain to reach maximum Entropy by entire cuboid.
+
+$$
+S_{max} = \ln(N!) - \sum_{i=0}^{m}(\ln(n_{ideal}!))
+$$
+
+$$
+S_{max} = \ln(N!) - m\cdot \ln(\frac{N}{m}!)
+$$
+
+According to Stirling's approximation $$\ln(n!) \approx n \cdot \ln(n) - n$$
+
+$$
+S_{max} \approx N\cdot\ln(N) - N - m \cdot [\frac{N}{m} \cdot \ln(\frac{N}{m}) - \frac{N}{m}]
+$$
+
+$$
+S_{max} \approx N\cdot\ln(N) - N \cdot \ln(\frac{N}{m})
+$$
+
+$$
+S_{max} \approx N(\ln(N) - \ln(\frac{N}{m}))
+$$
+
+$$
+S_{max} \approx N \cdot \ln(m)
+$$
