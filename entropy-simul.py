@@ -145,7 +145,7 @@ scene = canvas(title='Entropy simulation',
                width=800,
                height=600,
                align='left')
-N = 100
+N = 200
 L = 5
 dt = 0.01
 particles = []
@@ -183,7 +183,7 @@ graph_hist = graph(title="Maxwell-Boltzmann distribution",
 s_curve = gcurve(graph=graph_entropy, color=color.red)
 hist_bars = gvbars(graph=graph_hist, color=color.blue, delta=0.4)
 
-edges(L, color.cyan)
+edges_with_grid(L, color.cyan)
 t = 0
 
 
