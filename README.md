@@ -3,7 +3,22 @@
 This program calculates the entropy of the particles contained within the simulated room. Particles begin to spread out from a single point (Low Entropy) to others parts of the room (High Entropy). 
 They have random speeds and directions which is requeired in simulation.
 
-In my simulation, my cuboid measures 20x10x10 and a single particle has a radius of 0.2. I divided my entire room into 16 equal parts and I am checking how many partciles are in the each part at a given moment.
+In my simulation, my cuboid measures $4L$ x $2L$ x $2L$ ($L=5$) and a single particle has a radius of $0.2$. I divided my entire room into $16$ equal parts and I am checking how many partciles are in the each part at a given moment.
+<p align="left">
+  <img width="300" height="300" alt="1" src="https://github.com/user-attachments/assets/e631213b-2fd3-4d83-9dee-2bed20283019" />
+  <img width="300" height="300" alt="2" src="https://github.com/user-attachments/assets/c96b7eae-9c23-4ede-a47c-64268c8db507" />
+  <img width="300" height="300" alt="3" src="https://github.com/user-attachments/assets/1452ef51-25e7-47c8-ba62-3029387b83f7" />
+</p>
+
+I ran my simulation for various number of particles ($N$). For $N ≥ 1000$ it is better to use multiprocessing in the file `entropy-simul-multiprocessing.py`. The results in the table show the value calculated based on the computer simulation compared with the result expected according to theoretical predictions.
+
+| Number of partciles (N) | Theory (Stirling Approximation) | Simulation results | Difference (%) |
+|-----------------------|--------------------------|---------------------------|-------------|
+| 50                    | ~138.63                  |      113                  | 18.49%      |
+| 100                   | ~277.26                  |      248                  | 10.55%      |
+| 500                   | ~1386.29                 |      1350                 | 2.62%       |
+| 1000                  | ~2772.59                 |      2720                 | 1.19%       |
+| 5000                  | ~13862.94                |      13900                | 0.27%       |
 
 ## Logic
 
@@ -29,19 +44,19 @@ $$
 From Boltzmann's entropy formula (where we can ignore $k$)
 
 $$
-S = k\cdot\ln(W)
+S = k \cdot \ln(W)
 $$
 
 We can calculate the propability of reaching a specific macrostate by
 
 $$
-P(A) = \frac{N!}{n_1!n_2!...n_m!\cdot m^N} = \frac{W}{m^N}
+P(A) = \frac{N!}{n_1!n_2!...n_m! \cdot m^N} = \frac{W}{m^N}
 $$
 
 It's really hard to calculate for larger numbers. For the 2-parts system, we can approximate the result using a formula (Gaussian PDF):
 
 $$
-P(A_x)\approx\sqrt\frac{2}{\pi N}\cdot e^{-2(x-N/2)^2/N}
+P(A_x) \approx \sqrt\frac{2}{\pi N} \cdot e^{-2(x-N/2)^2/N}
 $$
 
 <div align="center">
@@ -49,7 +64,7 @@ $$
 </div>
 <br>
 
-As we can see the highest point of the graph lies at $x=5$. This is the state with the highest entropy and the largest number of microstates. With that in mind, the result for a larger number of parts ($m>2$) can be predicted. We will always achieve maximum Entropy in the state with the greatest dispersion and this is the most likely case.
+As we can see the highest point of the graph lies at $x=5$. This is the state with the highest entropy and the largest number of microstates. With that in mind, the result for a larger number of parts ($m>2$) can be predicted. We will always achieve maximum Entropy in the state with the greatest dispersion and this is the most likely case. Entropy will always triumph.
 
 The greatest dispersion of particles across a room means
 
