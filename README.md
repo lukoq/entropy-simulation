@@ -10,9 +10,26 @@ In my simulation, my cuboid measures $4L$ x $2L$ x $2L$ ($L=5$) and a single par
   <img width="300" height="300" alt="3" src="https://github.com/user-attachments/assets/1452ef51-25e7-47c8-ba62-3029387b83f7" />
 </p>
 
+
+```
+def calculate_entropy():
+    counts = [0] * 16
+
+    # counting...
+    
+    # W = N! / (n1! * n2! * ... * n8!)
+    # ln(W) = ln(N!) - sum(ln(ni!))
+    # ln(n!) is math.lgamma(n+1)
+    ln_W = math.lgamma(N + 1)
+    for n in counts:
+        if n > 0:
+            ln_W -= math.lgamma(n + 1)
+    return ln_W
+```
+
 I ran my simulation for various number of particles ($N$). For $N ≥ 1000$ it is better to use multiprocessing in the file `entropy-simul-multiprocessing.py`. The results in the table show the value calculated based on the computer simulation compared with the result expected according to theoretical predictions.
 
-| Number of partciles (N) | Theory (Stirling Approximation) | Simulation results | Difference (%) |
+| Number of partciles (N) | Stirling's approximation | Simulation results | Difference (%) |
 |-----------------------|--------------------------|---------------------------|-------------|
 | 50                    | ~138.63                  |      113                  | 18.49%      |
 | 100                   | ~277.26                  |      248                  | 10.55%      |
@@ -20,7 +37,7 @@ I ran my simulation for various number of particles ($N$). For $N ≥ 1000$ it i
 | 1000                  | ~2772.59                 |      2720                 | 1.19%       |
 | 5000                  | ~13862.94                |      13900                | 0.27%       |
 
-## Logic
+## The math behind
 
 Spread out particles realize a specific macrostate. The number of possible microstates in a given macrostate is
 
