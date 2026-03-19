@@ -15,6 +15,34 @@ def edges(L, edge_color):
         curve(pos=[c1[i], c2[i]], color=edge_color, radius=0.05)
 
 
+def edges_with_grid(L, edge_color):
+    c1 = [vector(-2 * L, -L, -L), vector(2 * L, -L, -L), vector(2 * L, -L, L), vector(-2 * L, -L, L),
+          vector(-2 * L, -L, -L)]
+    c2 = [vector(-2 * L, L, -L), vector(2 * L, L, -L), vector(2 * L, L, L), vector(-2 * L, L, L), vector(-2 * L, L, -L)]
+
+    curve(pos=c1, color=edge_color, radius=0.05)
+    curve(pos=c2, color=edge_color, radius=0.05)
+
+    for i in range(4):
+        curve(pos=[c1[i], c2[i]], color=edge_color, radius=0.05)
+
+    grid_color = color.gray(0.4)
+    grid_radius = 0.02
+
+    for x_val in [-L, 0, L]:
+        loop = [vector(x_val, -L, -L), vector(x_val, L, -L),
+                vector(x_val, L, L), vector(x_val, -L, L), vector(x_val, -L, -L)]
+        curve(pos=loop, color=grid_color, radius=grid_radius)
+
+    y_cut = [vector(-2 * L, 0, -L), vector(2 * L, 0, -L),
+             vector(2 * L, 0, L), vector(-2 * L, 0, L), vector(-2 * L, 0, -L)]
+    z_cut = [vector(-2 * L, -L, 0), vector(2 * L, -L, 0),
+             vector(2 * L, L, 0), vector(-2 * L, L, 0), vector(-2 * L, -L, 0)]
+
+    curve(pos=y_cut, color=grid_color, radius=grid_radius)
+    curve(pos=z_cut, color=grid_color, radius=grid_radius)
+
+
 def calculate_entropy():
     counts = [0] * 16
     for p in particles:
@@ -137,12 +165,14 @@ room = box(pos=vector(0, 0, 0),
            opacity=0.1,
            color=color.white)
 
-graph_entropy = graph(title="The increase of Entropy S = ln(W)",
+graph_entropy = graph(title=f'The increase of Entropy S = ln(W) (N={N})',
                       xtitle="Time",
                       ytitle="S",
                       width=400,
                       height=300,
-                      align='left')
+                      align='left',
+                      grid=True,
+                      )
 graph_hist = graph(title="Maxwell-Boltzmann distribution",
                    xtitle="Speed",
                    ytitle="Number of particles",
@@ -151,7 +181,7 @@ graph_hist = graph(title="Maxwell-Boltzmann distribution",
                    align='left')
 
 s_curve = gcurve(graph=graph_entropy, color=color.red)
-hist_bars = gvbars(graph=graph_hist, color=color.blue, delta=0.5)
+hist_bars = gvbars(graph=graph_hist, color=color.blue, delta=0.4)
 
 edges(L, color.cyan)
 t = 0
