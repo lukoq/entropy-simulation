@@ -1,8 +1,8 @@
 from vpython import *
 import random
 
-N1, m1, T1 = 10, 1, 300
-N2, m2, T2 = 10, 3, 500
+N1, m1, T1 = 100, 1, 50
+N2, m2, T2 = 100, 3, 500
 
 L = 10
 dt = 0.01
@@ -73,10 +73,12 @@ def handle_self_collisions(particles):
                 p2.pos -= direction * (overlap / 2)
 
                 v_rel = p1.v - p2.v
-                if v_rel.dot(direction) < 0:
-                    v_impact = v_rel.dot(direction) * direction
-                    p1.v -= v_impact
-                    p2.v += v_impact
+                v_rel_n = v_rel.dot(direction)
+
+                if v_rel_n < 0:
+                    impact = (2 * v_rel_n) / (p1.m + p2.m)
+                    p1.v -= impact * p2.m * direction
+                    p2.v += impact * p1.m * direction
 
 
 def update_particle_colors(particles):
@@ -108,11 +110,22 @@ def open_divider():
     partition.visible = False
 
 
-button(bind=open_divider, text="Otwórz ścianę")
+button(bind=open_divider, text="Remove the divider")
 edges(L, color.cyan)
 spawn_gas(N1, m1, T1, [-18, -1], color.blue)
 spawn_gas(N2, m2, T2, [1, 18], color.red)
+room = box(pos=vector(0, 0, 0),
+           size=vector(4 * L, 2 * L, 2 * L),
+           opacity=0.1,
+           color=color.white)
 
+t_graph = graph(xtitle="Czas", ytitle="Temperatura [K]", width=400, height=300, align='left')
+t_left_curve = gcurve(graph=t_graph, color=color.cyan, label="T Lewa")
+t_right_curve = gcurve(graph=t_graph, color=color.red, label="T Prawa")
+
+n_graph = graph(xtitle="Czas", ytitle="Liczba kulek (N)", width=400, height=300, align='left')
+n_left_curve = gcurve(graph=n_graph, color=color.cyan, label="N Lewa")
+n_right_curve = gcurve(graph=n_graph, color=color.red, label="N Prawa")
 
 t = 0
 while True:
@@ -121,5 +134,28 @@ while True:
     handle_wall_collisions(particles)
     handle_self_collisions(particles)
     update_particle_colors(particles)
+
+    n_left = 0
+    n_right = 0
+    e_left = 0
+    e_right = 0
+    for p in particles:
+        energy = 0.5 * p.m * p.v.mag2
+
+        if p.pos.x < 0:         # LEFT SIDE
+            n_left += 1
+            e_left += energy
+        else:                   # RIGHT SIDE
+            n_right += 1
+            e_right += energy
+
+    temp_left = (2 * (e_left / n_left)) / (3 * kb) if n_left > 0 else 0
+    temp_right = (2 * (e_right / n_right)) / (3 * kb) if n_right > 0 else 0
+
+    t_left_curve.plot(t, temp_left)
+    t_right_curve.plot(t, temp_right)
+
+    n_left_curve.plot(t, n_left)
+    n_right_curve.plot(t, n_right)
 
     t += dt
