@@ -1,7 +1,7 @@
 from vpython import *
 import random
 
-N1, m1, T1 = 100, 1, 50
+N1, m1, T1 = 10, 1, 50
 N2, m2, T2 = 100, 3, 500
 
 L = 10
@@ -21,9 +21,11 @@ def edges(L, edge_color):
     c1 = [vector(-2 * L, -L, -L), vector(2 * L, -L, -L), vector(2 * L, -L, L), vector(-2 * L, -L, L),
           vector(-2 * L, -L, -L)]
     c2 = [vector(-2 * L, L, -L), vector(2 * L, L, -L), vector(2 * L, L, L), vector(-2 * L, L, L), vector(-2 * L, L, -L)]
+    c3 = [vector(0, L, -L), vector(0, L, L), vector(0, -L, L), vector(0, -L, -L), vector(0, L, -L)]
 
     curve(pos=c1, color=edge_color, radius=0.05)
     curve(pos=c2, color=edge_color, radius=0.05)
+    curve(pos=c3, color=edge_color, radius=0.05)
 
     for i in range(4):
         curve(pos=[c1[i], c2[i]], color=edge_color, radius=0.05)
@@ -76,9 +78,8 @@ def handle_self_collisions(particles):
                 v_rel_n = v_rel.dot(direction)
 
                 if v_rel_n < 0:
-                    impact = (2 * v_rel_n) / (p1.m + p2.m)
-                    p1.v -= impact * p2.m * direction
-                    p2.v += impact * p1.m * direction
+                    p1.v -= (2 * v_rel_n) / (p1.m + p2.m) * p2.m * direction
+                    p2.v += (2 * v_rel_n) / (p1.m + p2.m) * p1.m * direction
 
 
 def update_particle_colors(particles):
@@ -119,13 +120,13 @@ room = box(pos=vector(0, 0, 0),
            opacity=0.1,
            color=color.white)
 
-t_graph = graph(xtitle="Czas", ytitle="Temperatura [K]", width=400, height=300, align='left')
-t_left_curve = gcurve(graph=t_graph, color=color.cyan, label="T Lewa")
-t_right_curve = gcurve(graph=t_graph, color=color.red, label="T Prawa")
+t_graph = graph(xtitle="Time", ytitle="Temperature [K]", width=400, height=300, align='left')
+t_left_curve = gcurve(graph=t_graph, color=color.cyan, label="Temp. left")
+t_right_curve = gcurve(graph=t_graph, color=color.red, label="Temp. right")
 
-n_graph = graph(xtitle="Czas", ytitle="Liczba kulek (N)", width=400, height=300, align='left')
-n_left_curve = gcurve(graph=n_graph, color=color.cyan, label="N Lewa")
-n_right_curve = gcurve(graph=n_graph, color=color.red, label="N Prawa")
+n_graph = graph(xtitle="Time", ytitle="The number of particles (N)", width=400, height=300, align='left')
+n_left_curve = gcurve(graph=n_graph, color=color.cyan, label="N left")
+n_right_curve = gcurve(graph=n_graph, color=color.red, label="N right")
 
 t = 0
 while True:
@@ -142,10 +143,10 @@ while True:
     for p in particles:
         energy = 0.5 * p.m * p.v.mag2
 
-        if p.pos.x < 0:         # LEFT SIDE
+        if p.pos.x < 0:  # LEFT SIDE
             n_left += 1
             e_left += energy
-        else:                   # RIGHT SIDE
+        else:  # RIGHT SIDE
             n_right += 1
             e_right += energy
 
