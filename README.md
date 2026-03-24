@@ -120,4 +120,84 @@ S_{max} \approx N \cdot \ln(m)
 $$
 
 -------
-### Collisions
+### Collisions (Elastic collision)
+
+When two particles collide, their momentum and kinetic energy are conserved.
+
+$$
+\begin{cases}
+m_1 v_{1i} + m_2 v_{2i} = m_1 v_{1f} + m_2 v_{2f} \\
+\frac{1}{2} m_1 v_{1i}^2 + \frac{1}{2} m_2 v_{2i}^2 = \frac{1}{2} m_1 v_{1f}^2 + \frac{1}{2} m_2 v_{2f}^2
+\end{cases}
+$$
+
+$$
+\begin{cases}
+m_1 v_{1i} -  m_1 v_{1f} =  m_2 v_{2f} - m_2 v_{2i} \\
+m_1 v_{1i}^2 - m_1 v_{1f}^2 = m_2 v_{2f}^2 - m_2 v_{2i}^2
+\end{cases}
+$$
+
+$$
+\begin{cases}
+m_1 (v_{1i} - v_{1f}) =  m_2 (v_{2f} - v_{2i}) \\
+m_1 (v_{1i}^2 - v_{1f}^2) = m_2 (v_{2f}^2 - v_{2i}^2)
+\end{cases}
+$$
+
+$$
+\frac{m_1 (v_{1i}^2 - v_{1f}^2)}{m_1 (v_{1i} - v_{1f})} = \frac{m_2 (v_{2f}^2 - v_{2i}^2)}{m_2 (v_{2f} - v_{2i})}
+\implies
+v_{1i} + v_{1f} = v_{2f} + v_{2i}
+\implies
+v_{1i} - v_{2i} = - (v_{1f} - v_{2f})
+$$
+
+The momentum of the first particle after the collision will be equal to
+
+$$
+\begin{cases}
+m_1 v_{1i} + m_2 v_{2i} = m_1 v_{1f} + m_2 v_{2f} \\
+v_{2f} = v_{1i} - v_{2i}  + v_{1f} 
+\end{cases}
+$$
+
+$$
+m_1 v_{1i} + m_2 v_{2i} = m_1 v_{1f} + m_2 (v_{1i} - v_{2i}  + v_{1f} )
+$$
+
+$$
+m_1 v_{1i} + m_2 v_{2i} = m_1 v_{1f} + m_2 (v_{1i} - v_{2i}  + v_{1f})
+$$
+
+$$
+m_1 v_{1i} + m_2 v_{2i} = m_1 v_{1f} + m_2 v_{1i} - m_2 v_{2i}  + m_2 v_{1f}
+$$
+
+$$
+m_1 v_{1f} + m_2 v_{1f} = m_1 v_{1i} + m_2 v_{2i} - m_2 v_{1i} + m_2 v_{2i}
+$$
+
+$$
+v_{1f}(m_1 + m_2) = v_{1i} (m_1 - m_2) + 2 m_2 v_{2i}
+$$
+
+$$
+v_{1f} = \frac{v_{1i} (m_1 - m_2) + 2 m_2 v_{2i}}{(m_1 + m_2)}
+$$
+
+Then the difference $v_{1f} - v_{1i}$ is
+
+$$
+v_\Delta = \frac{v_{1i} (m_1 - m_2) + 2 m_2 v_{2i}}{(m_1 + m_2)} - v_{1i}
+$$
+
+$$
+v_\Delta = \frac{-2 m_2 v_{1i} + 2 m_2 v_{2i}}{(m_1 + m_2)}
+$$
+
+$$
+v_\Delta = \frac{2 m_2(v_{2i} - v_{1i})}{(m_1 + m_2)}
+$$
+
+
