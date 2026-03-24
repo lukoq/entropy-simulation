@@ -1,6 +1,6 @@
 # Entropy simulation
 
-This program calculates the entropy of the particles contained within the simulated room. Particles begin to spread out from a single point (Low Entropy) to others parts of the room (High Entropy). 
+`entropy-simul.py` calculates the entropy of the particles contained within the simulated room. Particles begin to spread out from a single point (Low Entropy) to others parts of the room (High Entropy). 
 They have random speeds and directions which is requeired in simulation.
 
 In my simulation, my cuboid measures $4L$ x $2L$ x $2L$ ($L=5$) and a single particle has a radius of $0.2$. I divided my entire room into $16$ equal parts and I am checking how many partciles are in the each part at a given moment.
@@ -30,14 +30,16 @@ def calculate_entropy():
 I ran my simulation for various number of particles ($N$). For $N ≥ 1000$ it is better to use multiprocessing in the file `entropy-simul-multiprocessing.py`. The results in the table show the value calculated based on the computer simulation compared with the result expected according to theoretical predictions.
 
 | Number of partciles (N) | Stirling's approximation | Simulation results | Difference (%) |
-|-----------------------|--------------------------|---------------------------|-------------|
-| 50                    | ~138.63                  |      113                  | 18.49%      |
-| 100                   | ~277.26                  |      248                  | 10.55%      |
-| 500                   | ~1386.29                 |      1350                 | 2.62%       |
-| 1000                  | ~2772.59                 |      2720                 | 1.19%       |
-| 5000                  | ~13862.94                |      13900                | 0.27%       |
+|-----------------------|---------------------------|---------------------------|-------------|
+| 50                    |  ~138.63                  |      ~113                  | 18.49%      |
+| 100                   |  ~277.26                  |      ~248                  | 10.55%      |
+| 500                   |  ~1386.29                 |      ~1350                 | 2.62%       |
+| 1000                  |  ~2772.59                 |      ~2720                 | 1.19%       |
+| 5000                  |  ~13862.94                |      ~13900                | 0.27%       |
 
-## The math behind
+## The physics behind
+
+### Entropy
 
 Spread out particles realize a specific macrostate. The number of possible microstates in a given macrostate is
 
@@ -58,19 +60,19 @@ $$
 \ln(W) = \ln(N!) - (ln(n_1!)+ln(n_2!)+...+ln(n_m!))
 $$
 
-From Boltzmann's entropy formula (where we can ignore $k$)
+From Boltzmann's entropy formula (where you can ignore $k$)
 
 $$
 S = k \cdot \ln(W)
 $$
 
-We can calculate the propability of reaching a specific macrostate by
+You can calculate the propability of reaching a specific macrostate by
 
 $$
 P(A) = \frac{N!}{n_1!n_2!...n_m! \cdot m^N} = \frac{W}{m^N}
 $$
 
-It's really hard to calculate for larger numbers. For the 2-parts system, we can approximate the result using a formula (Gaussian PDF):
+It's really hard to calculate for larger numbers. For the 2-parts system, you can approximate the result using a formula (Gaussian PDF):
 
 $$
 P(A_x) \approx \sqrt\frac{2}{\pi N} \cdot e^{-2(x-N/2)^2/N}
@@ -81,7 +83,7 @@ $$
 </div>
 <br>
 
-As we can see the highest point of the graph lies at $x=5$. This is the state with the highest entropy and the largest number of microstates. With that in mind, the result for a larger number of parts ($m>2$) can be predicted. We will always achieve maximum Entropy in the state with the greatest dispersion and this is the most likely case. Entropy will always triumph.
+As you can see the highest point of the graph lies at $x=5$. This is the state with the highest entropy and the largest number of microstates. With that in mind, the result for a larger number of parts ($m>2$) can be predicted. It will always achieve maximum Entropy in the state with the greatest dispersion and this is the most likely case. Entropy will always triumph.
 
 The greatest dispersion of particles across a room means
 
@@ -116,3 +118,82 @@ $$
 $$
 S_{max} \approx N \cdot \ln(m)
 $$
+
+-------
+### Collisions (Elastic collision)
+
+When two particles collide, their momentum and kinetic energy are conserved.
+
+$$
+\begin{cases}
+m_1 v_{1i} + m_2 v_{2i} = m_1 v_{1f} + m_2 v_{2f} \\
+\frac{1}{2} m_1 v_{1i}^2 + \frac{1}{2} m_2 v_{2i}^2 = \frac{1}{2} m_1 v_{1f}^2 + \frac{1}{2} m_2 v_{2f}^2
+\end{cases}
+$$
+
+$$
+\begin{cases}
+m_1 v_{1i} -  m_1 v_{1f} =  m_2 v_{2f} - m_2 v_{2i} \\
+m_1 v_{1i}^2 - m_1 v_{1f}^2 = m_2 v_{2f}^2 - m_2 v_{2i}^2
+\end{cases}
+$$
+
+$$
+\begin{cases}
+m_1 (v_{1i} - v_{1f}) =  m_2 (v_{2f} - v_{2i}) \\
+m_1 (v_{1i}^2 - v_{1f}^2) = m_2 (v_{2f}^2 - v_{2i}^2)
+\end{cases}
+$$
+
+$$
+\frac{m_1 (v_{1i}^2 - v_{1f}^2)}{m_1 (v_{1i} - v_{1f})} = \frac{m_2 (v_{2f}^2 - v_{2i}^2)}{m_2 (v_{2f} - v_{2i})}
+\implies
+v_{1i} + v_{1f} = v_{2f} + v_{2i}
+\implies
+v_{1i} - v_{2i} = - (v_{1f} - v_{2f})
+$$
+
+The momentum of the first particle after the collision will be equal to
+
+$$
+\begin{cases}
+m_1 v_{1i} + m_2 v_{2i} = m_1 v_{1f} + m_2 v_{2f} \\
+v_{2f} = v_{1i} - v_{2i}  + v_{1f} 
+\end{cases}
+$$
+
+$$
+m_1 v_{1i} + m_2 v_{2i} = m_1 v_{1f} + m_2 (v_{1i} - v_{2i}  + v_{1f})
+$$
+
+$$
+m_1 v_{1i} + m_2 v_{2i} = m_1 v_{1f} + m_2 v_{1i} - m_2 v_{2i}  + m_2 v_{1f}
+$$
+
+$$
+m_1 v_{1f} + m_2 v_{1f} = m_1 v_{1i} + m_2 v_{2i} - m_2 v_{1i} + m_2 v_{2i}
+$$
+
+$$
+v_{1f}(m_1 + m_2) = v_{1i} (m_1 - m_2) + 2 m_2 v_{2i}
+$$
+
+$$
+v_{1f} = \frac{v_{1i} (m_1 - m_2) + 2 m_2 v_{2i}}{(m_1 + m_2)}
+$$
+
+Then the difference $v_{1f} - v_{1i}$ is
+
+$$
+v_\Delta = \frac{v_{1i} (m_1 - m_2) + 2 m_2 v_{2i}}{(m_1 + m_2)} - v_{1i}
+$$
+
+$$
+v_\Delta = \frac{-2 m_2 v_{1i} + 2 m_2 v_{2i}}{(m_1 + m_2)}
+$$
+
+$$
+v_\Delta = \frac{2 m_2(v_{2i} - v_{1i})}{(m_1 + m_2)}
+$$
+
+
